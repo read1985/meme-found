@@ -1,4 +1,4 @@
-import { PublicKey } from '@solana/web3.js';
+// import { PublicKey } from '@solana/web3.js';
 
 export interface TokenData {
   address: string;
@@ -72,8 +72,8 @@ export interface Alert {
     smartContract: SmartContractCondition;
     trading: TradingCondition;
   };
-  createdAt: string;
-  updatedAt: string;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 export interface TokenDistributionResult {
@@ -86,8 +86,8 @@ export interface TokenDistributionResult {
 export interface SmartContractResult {
   triggered: boolean;
   reason: string;
-  currentValue?: any;
-  threshold?: any;
+  currentValue?: unknown;
+  threshold?: unknown;
 }
 
 export interface AlertCheckResult {
@@ -98,15 +98,15 @@ export interface AlertCheckResult {
     liquidityPool: {
       triggered: boolean;
       reason?: string;
-      currentValue?: any;
-      threshold?: any;
+      currentValue?: unknown;
+      threshold?: unknown;
     };
     smartContract: SmartContractResult;
     trading: {
       triggered: boolean;
       reason?: string;
-      currentValue?: any;
-      threshold?: any;
+      currentValue?: unknown;
+      threshold?: unknown;
     };
   };
   timestamp: Date;

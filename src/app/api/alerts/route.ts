@@ -3,8 +3,6 @@ import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/db/prisma";
 import type { NextRequest } from "next/server";
 
-const headers = { 'Content-Type': 'application/json' };
-
 export async function POST(req: NextRequest) {
   try {
     // Check authentication
@@ -18,7 +16,7 @@ export async function POST(req: NextRequest) {
     try {
       body = await req.json();
       console.log('Request body:', body);
-    } catch (e) {
+    } catch (_) {
       return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
 
@@ -46,10 +44,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(alert, { status: 201 });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error:", error);
     return NextResponse.json(
-      { error: error.message || "Internal server error" },
+      { error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 }
     );
   }

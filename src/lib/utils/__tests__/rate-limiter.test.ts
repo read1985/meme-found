@@ -14,7 +14,11 @@ vi.mock('@upstash/redis', () => {
 
 describe('RateLimiter', () => {
   let rateLimiter: RateLimiter;
-  let mockRedis: jest.Mocked<Redis>;
+  let mockRedis: { 
+    multi: ReturnType<typeof vi.fn>;
+    del: ReturnType<typeof vi.fn>;
+    zrange: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     // Clear all mocks before each test
@@ -27,7 +31,7 @@ describe('RateLimiter', () => {
     });
 
     // Get the mocked Redis instance
-    mockRedis = (rateLimiter as any).redis;
+    mockRedis = (rateLimiter as unknown as { redis: typeof mockRedis }).redis;
   });
 
   afterEach(() => {
@@ -45,7 +49,7 @@ describe('RateLimiter', () => {
         exec: vi.fn().mockResolvedValue([null, null, 5]), // 5 requests in current window
       };
 
-      mockRedis.multi.mockReturnValue(mockMulti as any);
+      mockRedis.multi.mockReturnValue(mockMulti);
       mockRedis.zrange.mockResolvedValue([{ score: Date.now() - 30000, member: 'test' }]);
 
       const result = await rateLimiter.check('test-key');
@@ -66,7 +70,7 @@ describe('RateLimiter', () => {
         exec: vi.fn().mockResolvedValue([null, null, 11]), // 11 requests (over limit)
       };
 
-      mockRedis.multi.mockReturnValue(mockMulti as any);
+      mockRedis.multi.mockReturnValue(mockMulti);
       mockRedis.zrange.mockResolvedValue([{ score: Date.now() - 30000, member: 'test' }]);
 
       const result = await rateLimiter.check('test-key');
@@ -100,7 +104,7 @@ describe('RateLimiter', () => {
         exec: vi.fn().mockResolvedValue([null, null, 3]), // 3 requests in current window
       };
 
-      mockRedis.multi.mockReturnValue(mockMulti as any);
+      mockRedis.multi.mockReturnValue(mockMulti);
       mockRedis.zrange.mockResolvedValue([{ score: now - 50000, member: 'test' }]);
 
       const result = await rateLimiter.check('test-key');
@@ -119,7 +123,7 @@ describe('RateLimiter', () => {
         exec: vi.fn().mockResolvedValue([null, null, 1]),
       };
 
-      mockRedis.multi.mockReturnValue(mockMulti as any);
+      mockRedis.multi.mockReturnValue(mockMulti);
       mockRedis.zrange.mockResolvedValue([{ score: Date.now(), member: 'test' }]);
 
       await rateLimiter.check('test-key');

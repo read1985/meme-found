@@ -1,7 +1,8 @@
 'use client';
 
 import React from "react";
-import { useSession } from "next-auth/react";
+// Remove unused useSession import
+// import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import type { Coin } from "@/types/coin";
@@ -24,7 +25,8 @@ async function fetchAlerts(): Promise<Alert[]> {
 }
 
 export default function DashboardPage() {
-  const { data: session } = useSession();
+  // Remove unused session variable
+  // const { data: session } = useSession();
   const { data: coins, isLoading: isLoadingCoins, error: coinsError } = useQuery({
     queryKey: ['coins'],
     queryFn: fetchCoins,

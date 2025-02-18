@@ -1,4 +1,4 @@
-import { PublicKey, TokenAmount } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import { connectionManager } from '@/lib/solana/connection';
 import { convertTokenSupply } from '@/lib/solana/utils';
 import type { Alert, AlertCheckResult, TokenData, TokenDistributionResult, SmartContractResult, MonitoringServiceConfig, TokenSupplyInfo, TokenSupplyResponse } from '@/types';
@@ -10,15 +10,15 @@ interface AlertConditions {
   liquidityPool: {
     triggered: boolean;
     reason?: string;
-    currentValue?: any;
-    threshold?: any;
+    currentValue?: unknown;
+    threshold?: unknown;
   };
   smartContract: SmartContractResult;
   trading: {
     triggered: boolean;
     reason?: string;
-    currentValue?: any;
-    threshold?: any;
+    currentValue?: unknown;
+    threshold?: unknown;
   };
 }
 
@@ -221,7 +221,13 @@ export class MonitoringService {
         symbol: 'UNKNOWN',
         name: 'Unknown Token',
         decimals: rawTokenData.supply.decimals,
-        supply: rawTokenData.supply,
+        supply: {
+          total: rawTokenData.supply.total,
+          circulating: rawTokenData.supply.circulating,
+          uiAmount: rawTokenData.supply.uiAmount,
+          decimals: rawTokenData.supply.decimals,
+          uiAmountString: rawTokenData.supply.uiAmountString
+        },
         holders: {
           total: 0,
           distribution: []
@@ -276,8 +282,30 @@ export class MonitoringService {
           ...alert,
           tokenAddress, // Use the new token's address
           updatedAt: new Date().toISOString(),
+          createdAt: alert.createdAt.toISOString(),
           status: alert.status as 'active' | 'inactive',
-          conditions: JSON.parse(JSON.stringify(alert.conditions)) as AlertConditions,
+          conditions: {
+            tokenDistribution: {
+              enabled: true,
+              maxTopHolderPercentage: (alert.conditions as any).tokenDistribution?.maxTopHolderPercentage || 10
+            },
+            liquidityPool: {
+              enabled: true,
+              minLiquidity: (alert.conditions as any).liquidityPool?.minLiquidity || 1000,
+              requireLocked: (alert.conditions as any).liquidityPool?.requireLocked || false
+            },
+            smartContract: {
+              enabled: true,
+              requireVerified: (alert.conditions as any).smartContract?.requireVerified || false,
+              requireRenounced: (alert.conditions as any).smartContract?.requireRenounced || true
+            },
+            trading: {
+              enabled: true,
+              minDailyVolume: (alert.conditions as any).trading?.minDailyVolume || 1000,
+              maxBuyTax: (alert.conditions as any).trading?.maxBuyTax || 10,
+              maxSellTax: (alert.conditions as any).trading?.maxSellTax || 10
+            }
+          }
         };
 
         const result = await this.checkAlert(alertWithTypes);
@@ -449,7 +477,10 @@ export class MonitoringService {
           decimals: 9,
           supply: {
             total: 1000000000,
-            circulating: 1000000000
+            circulating: 1000000000,
+            uiAmount: 1000000000,
+            decimals: 9,
+            uiAmountString: "1000000000"
           },
           holders: {
             total: 1000,

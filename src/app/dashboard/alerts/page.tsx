@@ -3,7 +3,6 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import type { Alert } from '@/types/alert';
 
 async function fetchAlerts(): Promise<Alert[]> {
@@ -39,7 +38,6 @@ async function toggleAlertStatus(id: string, status: 'active' | 'inactive') {
 }
 
 export default function AlertsPage() {
-  const router = useRouter();
   const queryClient = useQueryClient();
   
   const { data: alerts, isLoading, error } = useQuery({
@@ -170,7 +168,7 @@ export default function AlertsPage() {
                           .filter(([k]) => k !== 'enabled')
                           .map(([k, v]) => (
                             <div key={k}>
-                              {k.replace(/([A-Z])/g, ' $1').trim()}: {v.toString()}
+                              {k.replace(/([A-Z])/g, ' $1').trim()}: {String(v)}
                             </div>
                           ))}
                       </div>

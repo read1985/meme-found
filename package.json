@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
@@ -41,11 +42,11 @@
     "vitest": "^3.0.5"
   },
   "pnpm": {
-    "ignoredBuiltDependencies": [
-      "bcrypt"
-    ],
     "onlyBuiltDependencies": [
-      "bcrypt"
+      "@prisma/client",
+      "@prisma/engines",
+      "bcrypt",
+      "prisma"
     ]
   }
 }

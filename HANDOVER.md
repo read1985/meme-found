@@ -25,7 +25,14 @@ A web service that allows users to monitor new coins on the Solana blockchain (s
    - Token supply tracking
    - Email notifications via SendGrid
 
-4. **Frontend**
+4. **Rate Limiting**
+   - Implemented using Vercel KV (Redis)
+   - Sliding window rate limiting
+   - Configurable limits per endpoint
+   - Proper rate limit headers
+   - Graceful error handling
+
+5. **Frontend**
    - Dashboard with recent coins list
    - Alert creation/editing interface
    - Monitoring status page
@@ -43,36 +50,63 @@ A web service that allows users to monitor new coins on the Solana blockchain (s
    - Alert checking logic
    - Connection management with failover
 
-3. **API Routes**
+3. **Rate Limiting** (`src/lib/utils/rate-limiter.ts`)
+   - Sliding window implementation
+   - Redis-based storage
+   - Configurable windows and limits
+
+4. **API Routes**
    - `/api/alerts/*` - Alert CRUD operations
    - `/api/monitoring/*` - Monitoring status and history
    - `/api/auth/*` - Authentication endpoints
 
-## Known Issues
+## Deployment
 
-1. **Rate Limiting**
-   - Current implementation needs optimization for high-traffic scenarios
-   - Consider implementing token bucket algorithm
+### Production Environment
+- Deployed on Vercel: https://meme-found-git-main-richardread85-gmailcoms-projects.vercel.app
+- Region: iad1 (US East)
+- Framework: Next.js
+- Node.js version: 18.x
 
-2. **Token Supply Handling**
-   - Type issues between Solana's RPC response and our TokenSupplyInfo interface
-   - Need to handle edge cases for tokens with unusual supply structures
+### Infrastructure
+1. **Database**
+   - Neon PostgreSQL for main database
+   - Vercel KV (Redis) for rate limiting
 
-3. **API Integration**
-   - Raydium API integration is currently mocked
-   - Solscan API integration needs proper error handling
+2. **Configuration**
+   - Environment variables managed through Vercel
+   - Rate limiting: 30 requests per minute per endpoint
+   - Automatic deployments on main branch
+
+3. **Monitoring**
+   - Vercel Analytics for performance monitoring
+   - Error tracking through console logs
+   - Rate limit monitoring through Redis
 
 ## Environment Setup
 
 Required environment variables (`.env`):
 ```
+# Database Configuration
 DATABASE_URL=
+
+# Blockchain Configuration
 NEXT_PUBLIC_SOLANA_RPC_URL=
 NEXT_PUBLIC_RAYDIUM_API_URL=
 NEXT_PUBLIC_SOLSCAN_API_KEY=
+
+# Authentication
 NEXTAUTH_URL=
 NEXTAUTH_SECRET=
 JWT_SECRET=
+
+# Rate Limiting (Vercel KV)
+KV_URL=
+KV_REST_API_URL=
+KV_REST_API_TOKEN=
+KV_REST_API_READ_ONLY_TOKEN=
+
+# Email Notifications
 SENDGRID_API_KEY=
 SENDGRID_FROM_EMAIL=
 ```
@@ -150,6 +184,7 @@ Currently using mock data for:
 ### Deployment
 - Configured for Vercel deployment
 - Uses Neon PostgreSQL for database
+- Uses Vercel KV for rate limiting
 - Requires setting up SendGrid for email notifications
 
 ## Architecture Decisions
@@ -163,7 +198,12 @@ Currently using mock data for:
    - Easy schema management
    - Good migration support
 
-3. **Connection Management**
+3. **Rate Limiting**
+   - Uses Vercel KV (Redis) for distributed rate limiting
+   - Sliding window algorithm for accurate limiting
+   - Graceful degradation on Redis failures
+
+4. **Connection Management**
    - Custom connection manager for Solana RPC
    - Implements failover and rate limiting
    - Supports multiple RPC endpoints

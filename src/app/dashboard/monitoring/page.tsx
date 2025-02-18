@@ -130,7 +130,7 @@ export default function MonitoringPage() {
                                 { triggered: boolean; reason?: string }
                               >
                             )
-                              .filter(([_, condition]) => condition.triggered)
+                              .filter(([, condition]) => condition.triggered)
                               .map(([name, condition]) => (
                                 <div key={name} className="mb-1">
                                   <span className="font-medium">
