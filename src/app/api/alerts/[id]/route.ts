@@ -5,9 +5,10 @@ import type { NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
+    const { id } = context.params;
     const token = await getToken({ req: request });
     if (!token?.sub) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -15,7 +16,7 @@ export async function GET(
 
     const alert = await prisma.alert.findUnique({
       where: {
-        id: params.id,
+        id: id,
         userId: token.sub,
       },
     });
