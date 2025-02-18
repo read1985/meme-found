@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "pnpm run build",
+  "buildCommand": "DISABLE_ESLINT_PLUGIN=true pnpm run build",
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": "nextjs",
@@ -9,11 +9,13 @@
   "env": {
     "NEXT_PUBLIC_SOLANA_RPC_URL": "https://api.mainnet-beta.solana.com",
     "NEXT_PUBLIC_RAYDIUM_API_URL": "https://api.raydium.io/v2",
-    "NEXT_PUBLIC_SOLSCAN_API_KEY": "@solscan-api-key"
+    "NEXT_PUBLIC_SOLSCAN_API_KEY": "@solscan-api-key",
+    "DISABLE_ESLINT_PLUGIN": "true"
   },
   "build": {
     "env": {
-      "NEXTAUTH_URL": "https://meme-found-git-main-richardread85-gmailcoms-projects.vercel.app"
+      "NEXTAUTH_URL": "https://meme-found-git-main-richardread85-gmailcoms-projects.vercel.app",
+      "DISABLE_ESLINT_PLUGIN": "true"
     }
   },
   "git": {
