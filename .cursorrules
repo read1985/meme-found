@@ -1,0 +1,53 @@
+{
+  "project": "Solana Raydium Coin Alert Service",
+  "description": "Guidelines for building a web service where users can sign up, view a dashboard of recent coins, and create custom alert conditions based on on‑chain metrics.",
+  "language": "TypeScript",
+  "frameworks": {
+    "frontend": "React/Next.js with Tailwind CSS",
+    "backend": "Node.js (or Next.js API routes) with integration to Solana RPC and third‑party APIs (Raydium, Solscan)"
+  },
+  "globalRules": [
+    "Use TypeScript with strict type checking.",
+    "Follow functional programming paradigms and keep functions small and focused.",
+    "Always use async/await for asynchronous operations.",
+    "Avoid blocking operations; optimize for performance."
+  ],
+  "frontendRules": {
+    "componentStructure": "Use functional React components with hooks. Break down complex views into reusable components.",
+    "styling": "Use Tailwind CSS to enforce a clean, minimal, and responsive design. Keep the dashboard visually appealing and easy to scan.",
+    "stateManagement": "Manage state with React Context or a lightweight state library. Ensure global state is minimal and predictable."
+  },
+  "backendRules": {
+    "architecture": "Organize code into controllers, services, and routes. Separate business logic from API handlers.",
+    "errorHandling": "Implement centralized error handling using try/catch and early returns. Log errors consistently.",
+    "apiIntegration": [
+      "Use Solana JSON RPC methods such as getTokenLargestAccounts and getAccountInfo to fetch token distribution and authority flags.",
+      "Integrate with Raydium and Solscan APIs for liquidity pool, transaction, and market data.",
+      "Implement caching strategies for blockchain data to reduce latency and load."
+    ],
+    "database": "Store user profiles, alert configurations, and coin metrics in a scalable database with proper indexing."
+  },
+  "alertRules": {
+    "criteria": [
+      "Token Distribution: Use getTokenLargestAccounts to monitor concentration among top holders.",
+      "Liquidity Pool: Fetch current liquidity pool size, lock status, and historical changes from Raydium/Solscan APIs.",
+      "Smart Contract Authority: Verify mint, freeze, and upgrade authorities via getAccountInfo to ensure they are renounced or transferred.",
+      "On‑Chain Transactions: Monitor daily transaction volume and patterns using getConfirmedSignaturesForAddress2.",
+      "Trading Volume & Fees: Compare trading volume and fees to detect potential manipulation.",
+      "Daily Active Addresses: Analyze DAU trends for organic growth versus bot activity.",
+      "Token Supply: Use getTokenSupply and transfer logs to track circulating supply and detect irregular issuance."
+    ],
+    "notification": "Trigger email alerts via a reliable email service when any alert condition is met."
+  },
+  "testingRules": [
+    "Write unit tests for both frontend and backend modules using Jest or similar frameworks.",
+    "Implement integration tests for API endpoints.",
+    "Use UI testing tools (e.g., React Testing Library) to verify dashboard functionality."
+  ],
+  "performance": [
+    "Optimize API response times by using asynchronous operations and caching strategies.",
+    "Minimize client‑side JavaScript and leverage server‑side rendering where possible.",
+    "Monitor performance metrics (e.g., response time, latency) and adjust as needed."
+  ],
+  "documentation": "Maintain clear inline comments and update the project README with architecture diagrams, setup instructions, and alert criteria details."
+}

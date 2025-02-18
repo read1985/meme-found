@@ -1,0 +1,116 @@
+Project Overview
+This project is a web-based service that monitors the Solana blockchain—specifically focusing on coins launched on Raydium—and alerts users when a new coin meets their custom, user-defined criteria. The primary goal is to empower users to catch potentially lucrative or risky tokens by leveraging real-time blockchain data and advanced filtering based on multiple metrics.
+
+Technical Architecture
+--------------------
+The application is built as a unified Next.js application deployed on Vercel, leveraging the platform's serverless architecture and edge computing capabilities.
+
+Frontend:
+- Next.js 13+ with App Router
+- React with TypeScript
+- Tailwind CSS for styling
+- Server and Client Components
+- Optimized with Incremental Static Regeneration (ISR)
+
+Backend:
+- Next.js API Routes (serverless functions)
+- Edge Functions for performance-critical operations
+- Vercel Postgres or similar serverless-compatible database
+- WebSocket support for real-time updates
+
+Key Features
+-----------
+1. User Authentication & Onboarding
+- Secure authentication system
+- Personalized dashboard access
+- User preference management
+- Profile customization
+
+2. Interactive Dashboard
+Real-Time Coin Data:
+- Dynamic dashboard showing new coins (past 6 hours)
+- Server-side rendered initial state
+- Real-time updates via WebSocket
+- Optimistic UI updates
+
+Metrics Display:
+- Interactive data tables with sorting/filtering
+- Real-time metric updates
+- Visual charts and graphs
+- Mobile-responsive design
+
+3. Custom Alert Creation
+Alert Configuration Interface:
+- Intuitive alert creation wizard
+- Real-time validation
+- Template-based quick setup
+- Custom threshold configuration
+
+Monitoring Criteria:
+- Token Distribution & Holder Concentration
+  - Uses Solana's getTokenLargestAccounts
+  - Real-time holder analysis
+  
+- Liquidity Pool Analysis
+  - Raydium API integration
+  - Historical liquidity tracking
+  - Lock status monitoring
+  
+- Smart Contract Security
+  - Authority verification
+  - Contract code analysis
+  - Risk scoring
+  
+- Transaction Analysis
+  - Volume patterns
+  - Holder behavior
+  - Bot detection
+  
+- Market Metrics
+  - Price impact analysis
+  - Volume/liquidity ratios
+  - Market manipulation detection
+
+4. Data Processing & Notifications
+- Serverless function processing
+- Edge computing for faster responses
+- Email notification system
+- In-app notifications
+- Webhook support for external integrations
+
+Performance Optimizations
+-----------------------
+- Edge Function deployment for global performance
+- Incremental Static Regeneration for static content
+- Dynamic caching strategies
+- Connection pooling for database operations
+- Optimized asset delivery via Vercel's CDN
+- Automatic scaling under load
+
+Security Measures
+---------------
+- Authentication middleware
+- Rate limiting
+- CSRF protection
+- Secure headers
+- Input validation
+- Data encryption
+- Regular security audits
+
+Monitoring & Maintenance
+----------------------
+- Vercel Analytics integration
+- Error tracking and logging
+- Performance monitoring
+- Automated backups
+- Health checks
+- Alerting system for system issues
+
+Development Workflow
+------------------
+- Automated preview deployments
+- Continuous integration
+- Code quality checks
+- Automated testing
+- Dependency management
+- Version control best practices
