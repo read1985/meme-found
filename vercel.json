@@ -9,7 +9,7 @@
   "env": {
     "NEXT_PUBLIC_SOLANA_RPC_URL": "https://api.mainnet-beta.solana.com",
     "NEXT_PUBLIC_RAYDIUM_API_URL": "https://api.raydium.io/v2",
-    "NEXT_PUBLIC_SOLSCAN_API_KEY": "@solscan-api-key",
+    "NEXT_PUBLIC_SOLSCAN_API_KEY": "your_solscan_api_key",
     "DISABLE_ESLINT_PLUGIN": "true",
     "SKIP_ENV_VALIDATION": "true"
   },
