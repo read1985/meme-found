@@ -1,12 +1,39 @@
-import React from "react";
-import { Metadata } from "next";
+'use client';
 
-export const metadata: Metadata = {
-  title: "Register | Solana Raydium Coin Alert Service",
-  description: "Create a new account",
-};
+import React, { FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.get('email'),
+          password: formData.get('password'),
+        }),
+      });
+
+      if (response.ok) {
+        router.push('/login');
+      } else {
+        const data = await response.json();
+        alert(data.error || 'Registration failed');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Registration failed. Please try again.');
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-10 shadow-lg">
@@ -15,7 +42,7 @@ export default function RegisterPage() {
             Create a new account
           </h2>
         </div>
-        <form className="mt-8 space-y-6" action="/api/auth/register" method="POST">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <label htmlFor="email" className="sr-only">

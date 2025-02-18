@@ -19,11 +19,22 @@ model User {
 }
 
 model Alert {
-  id         String   @id @default(cuid())
-  name       String
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  conditions Json
-  status     String   @default("active")
-  createdAt  DateTime @default(now())
+  id           String   @id @default(cuid())
+  name         String
+  userId       String
+  tokenAddress String?  // Optional Solana token mint address
+  user         User     @relation(fields: [userId], references: [id])
+  conditions   Json
+  status       String   @default("active")
+  createdAt    DateTime @default(now())
+  history      AlertHistory[]
+}
+
+model AlertHistory {
+  id                  String   @id @default(cuid())
+  alertId             String
+  alert               Alert    @relation(fields: [alertId], references: [id])
+  tokenAddress        String?
+  triggeredConditions Json
+  timestamp           DateTime @default(now())
 } 

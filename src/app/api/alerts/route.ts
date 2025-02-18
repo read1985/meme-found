@@ -3,21 +3,35 @@ import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/db/prisma";
 import type { NextRequest } from "next/server";
 
+const headers = { 'Content-Type': 'application/json' };
+
 export async function POST(req: NextRequest) {
   try {
+    // Check authentication
     const token = await getToken({ req });
     if (!token?.sub) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, conditions } = await req.json();
+    // Parse request body
+    let body;
+    try {
+      body = await req.json();
+      console.log('Request body:', body);
+    } catch (e) {
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    }
 
-    // Validate input
+    const { name, conditions, tokenAddress } = body;
+
+    // Validate required fields
     if (!name || !conditions) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    // Validate conditions structure
+    if (typeof conditions !== 'object' || conditions === null) {
+      return NextResponse.json({ error: "Invalid conditions format" }, { status: 400 });
     }
 
     // Create alert
@@ -25,15 +39,17 @@ export async function POST(req: NextRequest) {
       data: {
         name,
         conditions,
+        tokenAddress: tokenAddress === '' ? null : tokenAddress,
         userId: token.sub,
       },
     });
 
     return NextResponse.json(alert, { status: 201 });
-  } catch (error) {
-    console.error("Error creating alert:", error);
+
+  } catch (error: any) {
+    console.error("Error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: error.message || "Internal server error" },
       { status: 500 }
     );
   }
@@ -58,9 +74,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(alerts);
   } catch (error) {
     console.error("Error fetching alerts:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch alerts" }, { status: 500 });
   }
 } 

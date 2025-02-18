@@ -1,12 +1,35 @@
-import React from "react";
-import { Metadata } from "next";
+'use client';
 
-export const metadata: Metadata = {
-  title: "Login | Solana Raydium Coin Alert Service",
-  description: "Login to your account",
-};
+import React, { FormEvent } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      const result = await signIn("credentials", {
+        email: formData.get("email"),
+        password: formData.get("password"),
+        redirect: false,
+      });
+
+      if (result?.error) {
+        alert(result.error);
+      } else {
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Failed to login. Please try again.");
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-10 shadow-lg">
@@ -15,7 +38,7 @@ export default function LoginPage() {
             Sign in to your account
           </h2>
         </div>
-        <form className="mt-8 space-y-6" action="/api/auth/callback/credentials" method="POST">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <label htmlFor="email" className="sr-only">

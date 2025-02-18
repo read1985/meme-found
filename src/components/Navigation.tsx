@@ -1,8 +1,12 @@
+'use client';
+
 import React from "react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export function Navigation() {
+  const { data: session } = useSession();
+
   return (
     <nav className="bg-white shadow">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -30,7 +34,7 @@ export function Navigation() {
           </div>
           <div className="flex items-center">
             <button
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: "/" })}
               className="rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
               Sign Out
