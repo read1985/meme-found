@@ -3,13 +3,16 @@ import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/db/prisma";
 import type { NextRequest } from "next/server";
 
-interface RouteParams {
+type RouteContext = {
   params: {
     id: string;
   };
-}
+};
 
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  context: RouteContext
+) {
   try {
     const token = await getToken({ req: request });
     if (!token?.sub) {
@@ -18,7 +21,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     const alert = await prisma.alert.findUnique({
       where: {
-        id: params.id,
+        id: context.params.id,
         userId: token.sub,
       },
     });
@@ -34,7 +37,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(
+  request: NextRequest,
+  context: RouteContext
+) {
   try {
     const token = await getToken({ req: request });
     if (!token?.sub) {
@@ -43,7 +49,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     await prisma.alert.delete({
       where: {
-        id: params.id,
+        id: context.params.id,
         userId: token.sub,
       },
     });
@@ -55,7 +61,10 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: RouteParams) {
+export async function PATCH(
+  request: NextRequest,
+  context: RouteContext
+) {
   try {
     const token = await getToken({ req: request });
     if (!token?.sub) {
@@ -71,7 +80,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     const alert = await prisma.alert.update({
       where: {
-        id: params.id,
+        id: context.params.id,
         userId: token.sub,
       },
       data: {
