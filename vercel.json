@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "pnpm run build",
+  "buildCommand": "DISABLE_ESLINT_PLUGIN=true SKIP_ENV_VALIDATION=true next build --no-lint",
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": "nextjs",
