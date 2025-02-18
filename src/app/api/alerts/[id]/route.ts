@@ -3,13 +3,13 @@ import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/db/prisma";
 import type { NextRequest } from "next/server";
 
-type Context = {
+type Props = {
   params: { id: string };
 };
 
 export async function GET(
   request: NextRequest,
-  { params }: Context
+  props: Props
 ) {
   try {
     const token = await getToken({ req: request });
@@ -19,7 +19,7 @@ export async function GET(
 
     const alert = await prisma.alert.findUnique({
       where: {
-        id: params.id,
+        id: props.params.id,
         userId: token.sub,
       },
     });
@@ -37,7 +37,7 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: Context
+  props: Props
 ) {
   try {
     const token = await getToken({ req: request });
@@ -47,7 +47,7 @@ export async function DELETE(
 
     await prisma.alert.delete({
       where: {
-        id: params.id,
+        id: props.params.id,
         userId: token.sub,
       },
     });
@@ -61,7 +61,7 @@ export async function DELETE(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: Context
+  props: Props
 ) {
   try {
     const token = await getToken({ req: request });
@@ -78,7 +78,7 @@ export async function PATCH(
 
     const alert = await prisma.alert.update({
       where: {
-        id: params.id,
+        id: props.params.id,
         userId: token.sub,
       },
       data: {
